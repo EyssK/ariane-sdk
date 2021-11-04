@@ -112,9 +112,10 @@ Image: $(buildroot_defconfig) $(linux_defconfig) $(busybox_defconfig) $(RISCV)/b
 Image.gz: Image
 	gzip -9 --force $< > $@
 
-u-boot/u-boot.bin u-boot/tools/mkimage:
+u-boot.bin u-boot/tools/mkimage:
 	make -C u-boot pulp-platform_occamy_defconfig
 	make -C u-boot CROSS_COMPILE=../install/bin/riscv64-unknown-linux-gnu-
+	cp u-boot/u-boot.bin $@ 
 
 # OpenSBI with Linux as payload
 fw_payload.elf fw_payload.bin: Image
