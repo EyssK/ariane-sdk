@@ -112,7 +112,7 @@ Image: $(buildroot_defconfig) $(linux_defconfig) $(busybox_defconfig) $(RISCV)/b
 Image.gz: Image
 	gzip -9 --force $< > $@
 
-u-boot/u-boot.bin:
+u-boot/u-boot.bin u-boot/tools/mkimage:
 	make -C u-boot pulp-platform_occamy_defconfig
 	make -C u-boot CROSS_COMPILE=../install/bin/riscv64-unknown-linux-gnu-
 
@@ -126,7 +126,7 @@ fw_payload.gz: fw_payload.bin
 	gzip -9 $<
 
 # U-Boot-compatible Linux+SBI image
-uImage.bin: fw_payload.gz
+uImage.bin: fw_payload.gz u-boot/tools/mkimage
 	u-boot/tools/mkimage -A riscv -O linux -T kernel -C gzip -a 80000000 -e 80000000 -n "linux" -d $< $@
 
 clean:
