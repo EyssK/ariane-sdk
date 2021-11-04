@@ -122,8 +122,8 @@ fw_payload.elf fw_payload.bin: Image
 	cp opensbi/build/platform/$(PLATFORM)/firmware/fw_payload.elf fw_payload.elf
 	cp opensbi/build/platform/$(PLATFORM)/firmware/fw_payload.bin fw_payload.bin
 
-fw_payload.gz: fw_payload.elf
-	tar -czf $@ $<
+fw_payload.gz: fw_payload.bin
+	gzip -9 $<
 
 # U-Boot-compatible Linux+SBI image
 uImage.bin: fw_payload.gz
@@ -134,6 +134,7 @@ clean:
 	make -C u-boot clean
 	make -C opensbi clean
 	make -C buildroot distclean
+	rm -rf fw_payload.elf fw_payload.bin uImage.bin uImage Image.gz Image
 
 clean-all: clean
 	rm -rf riscv-fesvr/build riscv-isa-sim/build riscv-gnu-toolchain/build riscv-tests/build riscv-pk/build
