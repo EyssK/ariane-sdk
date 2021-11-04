@@ -130,6 +130,13 @@ fw_payload.gz: fw_payload.bin
 uImage.bin: fw_payload.gz u-boot/tools/mkimage
 	u-boot/tools/mkimage -A riscv -O linux -T kernel -C gzip -a 80000000 -e 80000000 -n "linux" -d $< $@
 
+# need to run this in sudo, be careful to set the correct SDDEVICE
+SDDEVICE=/dev/sdb
+flash-sdcard: uImage.bin u-boot.bin
+	sgdisk --clear --new=1:2048:3072 --new=2 --typecode=1:3000 --typecode=2:8300 $(SDDEVICE)
+	dd if=u-boot.bin of=$(SDDEVICE)1 status=progress oflag=sync bs=1M
+	dd if=uImage.bin of=$(SDDEVICE)2 status=progress oflag=sync bs=1M
+
 clean:
 	rm -rf Image riscv-pk/build/Image riscv-pk/build/bbl cachetest/*.elf rootfs/usr/bin/tetris
 	make -C u-boot clean
