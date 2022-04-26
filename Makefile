@@ -1,6 +1,6 @@
 # Makefile for RISC-V toolchain; run 'make help' for usage. set XLEN here to 32 or 64.
 
-XLEN     := 64
+XLEN     := 32
 ROOT     := $(patsubst %/,%, $(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 RISCV    := $(PWD)/install$(XLEN)
 DEST     := $(abspath $(RISCV))
@@ -151,8 +151,7 @@ spike_payload: $(RISCV)/spike_fw_payload.elf
 images: $(CC) $(RISCV)/fw_payload.bin $(RISCV)/uImage
 
 clean:
-	rm -rf $(RISCV)/vmlinux cachetest/*.elf rootfs/tetris rootfs/cachetest.elf
-	rm -rf $(RISCV)/fw_payload.bin $(RISCV)/uImage $(RISCV)/Image.gz
+	rm -rf cachetest/*.elf rootfs/tetris rootfs/cachetest.elf
 	make -C u-boot clean
 	make -C opensbi distclean
 
